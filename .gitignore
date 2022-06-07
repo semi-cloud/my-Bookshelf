@@ -140,3 +140,6 @@ migrations/
 
 # image files
 _media/
+
+# config files
+.config_secret/
