@@ -1,7 +1,13 @@
-from django.db import models
+from urllib.request import urlopen
+
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 from django.contrib.auth.models import User
 # Create your models here.
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+
+import datetime
 
 
 class Tag(models.Model):
@@ -16,22 +22,32 @@ class Tag(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=30)
-    author = models.CharField(max_length=10)
+    title = models.CharField(max_length=100)
+    author = models.CharField(max_length=50)
     content = models.CharField(max_length=500, blank=True)
-    ratio = models.IntegerField(blank=True)
+    ratio = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True)
 
-    image = models.ImageField(upload_to='book_pages/images/%Y/%m/%d/')     # 널 허용
+    image = models.ImageField(upload_to='book_pages/images/%Y/%m/%d/')
+    image_url = models.URLField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):
-        return f'[{self.pk}]'
+        return f'{self.pk}'
 
     def get_absolute_url(self):
         return f'/book/{self.pk}/'
+
+    def save(self, *args, **kwargs):       # 이미지 저장
+        if self.image_url and not self.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(self.image_url).read())
+            img_temp.flush()
+            self.image.save(f"image_{datetime.datetime.now()}.jpg", File(img_temp))
+        super(Book, self).save(*args, **kwargs)
+
 

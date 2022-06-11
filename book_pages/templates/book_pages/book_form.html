@@ -1,0 +1,16 @@
+{% extends 'book_pages/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block main_area %}
+ <div class="container my-3">
+      <div class="row justify-content-center">
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                <table>
+                    {{ form | crispy }}
+                </table>
+            <button type="submit" class="btn btn-primary float-right">저장</button>
+            </form>
+          {{ form.media }}
+      </div>
+ </div>
+{% endblock %}
