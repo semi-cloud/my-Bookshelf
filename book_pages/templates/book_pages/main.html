@@ -1,34 +1,18 @@
 {% extends 'book_pages/base.html' %}
 
 {% block main_area %}
-  <!-- 검색 목록-->
-  {% for item in items %}
-  <div class="container my-3">
+  <!--태그 목록-->
+    <div class="container my-3">
       <div class="row justify-content-center">
-        <div class="card mb-3" style="max-width: 600px;">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="{{ item.thumbnail }}" class="img-fluid rounded-start" alt="Card image cap">
+            <div class="col">
+            {% for tag in tag_list %}
+                    <button type="button" style="border-radius: 40px" class="btn btn-outline-warning">{{ tag }}</button>
+            {% endfor %}
+                <button type="button" style="border-radius: 100px" onclick="location.href='{% url 'tag' %}'" class="btn btn-warning">+</button>
             </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">{{ item.title }}</h5>
-                <p class="card-text">{{ item.contents | truncatewords_html:20 | safe }}</p>
-                  <form class="d-flex" action="{% url 'add' %}" method="POST">
-                        {% csrf_token %}
-                        <input name = "item" class = "temp2" type="hidden" value="{{ item }}">
-                        <button class="btn btn-outline-warning" type="submit"> 책장에 추가 </button>
-                  </form>
-              </div>
-            </div>
-            </div>
-            <div class="card-footer text-muted">
-                Published on {{ item.datetime }} written by
-                <a href="#">{{ item.authors }}</a>
-            </div>
-          </div>
       </div>
     </div>
-  {% endfor %}
+
+  <!--나의 책장-->
 
 {% endblock %}

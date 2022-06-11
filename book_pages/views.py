@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 import urllib
 from urllib.parse import urlparse
 
@@ -9,8 +9,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 import json
 
-from .forms import BookForm
-from .models import Book
+from .forms import BookForm, TagForm
+from .models import Book, Tag
 from main import settings
 
 
@@ -28,10 +28,26 @@ class BookUpdate(UpdateView):        # create + update
         }
 
 
+class TagCreate(CreateView):
+    model = Tag
+    form_class = TagForm
+    success_url = "/book/create/tag/"
+
+    def get_context_data(self, **kwargs):
+        context = super(TagCreate, self).get_context_data()
+        context['tag_list'] = Tag.objects.all()
+        return context
+
+    # Post
+    def form_valid(self, form):
+        form.instance.slug = form.instance.name     # slug 값 채우기
+        return super(TagCreate, self).form_valid(form)
+
+
 def main(request):
+    context = {'tag_list': Tag.objects.all()}
     return render(
-        request,
-        'book_pages/main.html',
+        request, 'book_pages/main.html', context
     )
 
 
@@ -65,4 +81,4 @@ def search(request):
         context = {
             'items': items
         }
-        return render(request, 'book_pages/main.html', context=context)
+        return render(request, 'book_pages/search.html', context=context)
