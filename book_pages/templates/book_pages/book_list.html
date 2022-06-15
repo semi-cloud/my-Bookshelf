@@ -27,21 +27,22 @@
                             <p class="card-text">
                                  <div id= "{{ item }}"></div>
                                  <script>
-                                     let i  = 0
-                                     for (i = 0 ; i < {{ item.ratio }} ; i++) {
+                                     for (let i = 0 ; i < {{ item.ratio }} ; i++) {
                                         let rate = document.createElement('span');
                                         rate.classList.add('fa');
                                         rate.classList.add('fa-star');
                                         rate.classList.add('checked');
                                         let box = document.getElementById("{{ item }}");
+                                        console.log(box.id);
                                         box.appendChild(rate);
                                      }
 
-                                    for (i = 0; i < 5 - {{ item.ratio }}; i++) {
+                                    for (let i = 0; i < 5 - {{ item.ratio }}; i++) {
                                         let rate = document.createElement('span');
                                         rate.classList.add('fa');
                                         rate.classList.add('fa-star');
                                         let box = document.getElementById("{{ item }}");
+                                        console.log(box.id);
                                         box.appendChild(rate);
                                     }
                                  </script>
