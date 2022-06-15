@@ -12,6 +12,7 @@
     </div>
 
   <!--나의 책장-->
+         <h1 style="color: #645247">My-BOOKSHELF</h1>
         <div class="container my-3">
           <div class="row justify-content-center">
               {% for item in items %}
@@ -19,7 +20,9 @@
                     <div class="card mb-3" style="max-width: 500px;">
                       <div class="row g-0">
                         <div class="col-md-4">
-                          <img src="{{ item.image.url }}" class="img-fluid rounded-start" alt="Card image cap">
+                            {% if item.image %}
+                                  <img src="{{ item.image.url }}" class="img-fluid rounded-start" alt="Card image cap">
+                            {% endif %}
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
@@ -46,7 +49,7 @@
                                         box.appendChild(rate);
                                     }
                                  </script>
-                               <a href=" {{ item.get_absolute_url }}" class="btn btn-outline-warning" style="border-radius: 40px">More</a>
+                               <a href=" {{ item.get_absolute_url }}" class="btn btn-outline-warning" style="border-radius:40px">More</a>
                               </div>
                             </p>
                           </div>

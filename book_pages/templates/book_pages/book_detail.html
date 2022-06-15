@@ -1,0 +1,66 @@
+{% extends 'book_pages/base.html' %}
+
+{% block main_area %}
+    <div class="container my-3">
+      <div class="row justify-content-center">
+        <div class="card">
+{#          <div class="card-header">#}
+{#             {% if book.tags.exists %}#}
+{#                {% for tag in book.tags.iterator %}#}
+{#                         <button type="button" style="border-radius: 40px; color:#706262" class="btn btn-warning">{{ tag }}</button>#}
+{#                    {% endfor %}#}
+{#              {% endif %}#}
+{#          </div>#}
+          <div class="card-body">
+            <h5 class="card-title" style="font-size: 1.8em">{{ book.title }}</h5>
+            <div class="author" style="font:  0.9em gray;">By {{ book.author }}</div>
+            <br>
+            <div class="row justify-content-center">
+                {% if book.image %}
+                       <img src="{{ book.image.url }}" class="img-fluid rounded-start" alt="Card image cap">
+              {% endif %}
+            </div>
+            <br>
+              <div class="row justify-content-center" id= "{{ book }}"></div>
+             <script>
+                 for (let i = 0 ; i < {{ book.ratio }} ; i++) {
+                    let rate = document.createElement('span');
+                    rate.classList.add('fa');
+                    rate.classList.add('fa-star');
+                    rate.classList.add('checked');
+                    let box = document.getElementById("{{ book }}");
+                    console.log(box.id);
+                    box.appendChild(rate);
+                 }
+
+                for (let i = 0; i < 5 - {{ book.ratio }}; i++) {
+                    let rate = document.createElement('span');
+                    rate.classList.add('fa');
+                    rate.classList.add('fa-star');
+                    let box = document.getElementById("{{ book }}");
+                    console.log(box.id);
+                    box.appendChild(rate);
+                }
+             </script>
+             <br>
+              {% if book.tags.exists %}
+                {% for tag in book.tags.iterator %}
+                         <button type="button" style="border-radius: 40px;" class="btn btn-outline-warning">{{ tag }}</button>
+                    {% endfor %}
+              {% endif %}
+              <hr>
+            <p class="card-text">
+                {{ book.content }}
+            </p>
+            <div class="create_date" style="font: italic 0.9em gray; color: gray">Posted on {{ book.created_at }}</div>
+           <div class="update_date" style="font: italic 0.9em gray; color: gray">Last Updated on {{ book.updated_at }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments Form -->
+    <div class="row">
+      <h5 style="font-size: 1.3em"> Leave a Comment</h5>
+    </div>
+{% endblock %}

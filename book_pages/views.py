@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, UpdateView, ListView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 import urllib
 from urllib.parse import urlparse
 
@@ -36,6 +36,14 @@ class BookList(ListView):
         context = super(BookList, self).get_context_data()
         context['items'] = Book.objects.all()
         context['tag_list'] = Tag.objects.all()
+        return context
+
+
+class BookDetail(DetailView):
+    model = Book
+
+    def get_context_data(self, **kwargs):
+        context = super(BookDetail, self).get_context_data()
         return context
 
 
