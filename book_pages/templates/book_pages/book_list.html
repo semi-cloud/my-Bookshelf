@@ -5,14 +5,14 @@
     <div class="container my-3">
       <div class="row justify-content-center">
             {% for tag in tag_list %}
-                    <button type="button" style="border-radius: 40px" class="btn btn-outline-warning">{{ tag }}</button>
+                    <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body">{{ tag }}</button>
             {% endfor %}
                 <button type="button" style="border-radius: 100px" onclick="location.href='{% url 'tag' %}'" class="btn btn-warning">+</button>
       </div>
     </div>
 
   <!--나의 책장-->
-         <h1 style="color: #645247">My-BOOKSHELF</h1>
+         <h1 class="title" style="color: #645247">My-BOOKSHELF</h1>
         <div class="container my-3">
           <div class="row justify-content-center">
               {% for item in items %}
@@ -26,7 +26,7 @@
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
-                            <h5 class="card-title">{{ item.title }}</h5>
+                            <h5 class="card-title font">{{ item.title }}</h5>
                             <p class="card-text">
                                  <div id= "{{ item }}"></div>
                                  <script>
@@ -49,14 +49,14 @@
                                         box.appendChild(rate);
                                     }
                                  </script>
-                               <a href=" {{ item.get_absolute_url }}" class="btn btn-outline-warning" style="border-radius:40px">More</a>
+                               <a href=" {{ item.get_absolute_url }}" class="btn btn-outline-warning" style="border-radius:40px; font-size: 0.8em">More</a>
                               </div>
                             </p>
                           </div>
                         </div>
                       <div class="card-footer text-muted">
                              {% for tag in item.tags.iterator %}
-                                    <button type="button" style="border-radius: 40px; color:#706262" class="btn btn-warning">{{ tag }}</button>
+                                    <button type="button" style="border-radius: 40px; color:#706262; font-size: 0.9em" class="btn btn-warning">{{ tag }}</button>
                                  {%  endfor %}
                       </div>
                       </div>

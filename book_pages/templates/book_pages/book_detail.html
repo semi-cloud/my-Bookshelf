@@ -4,16 +4,9 @@
     <div class="container my-3">
       <div class="row justify-content-center">
         <div class="card">
-{#          <div class="card-header">#}
-{#             {% if book.tags.exists %}#}
-{#                {% for tag in book.tags.iterator %}#}
-{#                         <button type="button" style="border-radius: 40px; color:#706262" class="btn btn-warning">{{ tag }}</button>#}
-{#                    {% endfor %}#}
-{#              {% endif %}#}
-{#          </div>#}
           <div class="card-body">
-            <h5 class="card-title" style="font-size: 1.8em">{{ book.title }}</h5>
-            <div class="author" style="font:  0.9em gray;">By {{ book.author }}</div>
+            <h5 class="card-title font" style="font-size: 1.8em">{{ book.title }}</h5>
+            <div class="author font" style="font:  0.9em gray;">By {{ book.author }}</div>
             <br>
             <div class="row justify-content-center">
                 {% if book.image %}
@@ -49,7 +42,7 @@
                     {% endfor %}
               {% endif %}
               <hr>
-            <p class="card-text">
+            <p class="card-text body">
                 {{ book.content }}
             </p>
             <div class="create_date" style="font: italic 0.9em gray; color: gray">Posted on {{ book.created_at }}</div>
