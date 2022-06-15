@@ -7,5 +7,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('add/', views.add_book, name="add"),
     path('create/<int:pk>', views.BookUpdate.as_view()),
+    path('tag/<str:slug>/', views.tag_filter),
     path('create/tag/', views.TagCreate.as_view(), name="tag")
 ]

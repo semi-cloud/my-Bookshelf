@@ -77,6 +77,17 @@ def add_book(request):
         return redirect(f'http://localhost:8000/book/create/{book_pages.pk}')
 
 
+def tag_filter(request, slug):
+    tag = Tag.objects.get(slug=slug)
+    book_list = tag.book_set.all()
+
+    context = {
+        'tag_list': Tag.objects.all(),
+        'items': book_list
+    }
+    return render(request, 'book_pages/book_list.html', context)
+
+
 def search(request):
     if request.method == 'GET':
         config_secret_debug = json.loads(open(settings.SECRET_DEBUG_FILE).read())

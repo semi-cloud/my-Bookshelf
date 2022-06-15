@@ -5,7 +5,8 @@
     <div class="container my-3">
       <div class="row justify-content-center">
             {% for tag in tag_list %}
-                    <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body">{{ tag }}</button>
+                    <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
+                            onclick="location.href='{{ tag.get_absolute_url }}'">{{ tag }}</button>
             {% endfor %}
                 <button type="button" style="border-radius: 100px" onclick="location.href='{% url 'tag' %}'" class="btn btn-warning">+</button>
       </div>
@@ -56,7 +57,7 @@
                         </div>
                       <div class="card-footer text-muted">
                              {% for tag in item.tags.iterator %}
-                                    <button type="button" style="border-radius: 40px; color:#706262; font-size: 0.9em" class="btn btn-warning">{{ tag }}</button>
+                                    <button type="button" style="border-radius: 40px; color:#706262; font-size: 0.9em" class="btn btn-warning" >{{ tag }}</button>
                                  {%  endfor %}
                       </div>
                       </div>
