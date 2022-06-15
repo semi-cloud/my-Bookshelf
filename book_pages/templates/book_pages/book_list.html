@@ -1,0 +1,63 @@
+{% extends 'book_pages/base.html' %}
+
+{% block main_area %}
+  <!--태그 목록-->
+    <div class="container my-3">
+      <div class="row justify-content-center">
+            {% for tag in tag_list %}
+                    <button type="button" style="border-radius: 40px" class="btn btn-outline-warning">{{ tag }}</button>
+            {% endfor %}
+                <button type="button" style="border-radius: 100px" onclick="location.href='{% url 'tag' %}'" class="btn btn-warning">+</button>
+      </div>
+    </div>
+
+  <!--나의 책장-->
+        <div class="container my-3">
+          <div class="row justify-content-center">
+              {% for item in items %}
+                <div class="col-md-5">
+                    <div class="card mb-3" style="max-width: 500px;">
+                      <div class="row g-0">
+                        <div class="col-md-4">
+                          <img src="{{ item.image.url }}" class="img-fluid rounded-start" alt="Card image cap">
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <p class="card-text">
+                                 <div id= "{{ item }}"></div>
+                                 <script>
+                                     let i  = 0
+                                     for (i = 0 ; i < {{ item.ratio }} ; i++) {
+                                        let rate = document.createElement('span');
+                                        rate.classList.add('fa');
+                                        rate.classList.add('fa-star');
+                                        rate.classList.add('checked');
+                                        let box = document.getElementById("{{ item }}");
+                                        box.appendChild(rate);
+                                     }
+
+                                    for (i = 0; i < 5 - {{ item.ratio }}; i++) {
+                                        let rate = document.createElement('span');
+                                        rate.classList.add('fa');
+                                        rate.classList.add('fa-star');
+                                        let box = document.getElementById("{{ item }}");
+                                        box.appendChild(rate);
+                                    }
+                                 </script>
+                               <a href=" {{ item.get_absolute_url }}" class="btn btn-outline-warning" style="border-radius: 40px">More</a>
+                              </div>
+                            </p>
+                          </div>
+                        </div>
+                      <div class="card-footer text-muted">
+                             {% for tag in item.tags.iterator %}
+                                    <button type="button" style="border-radius: 40px; color:#706262" class="btn btn-warning">{{ tag }}</button>
+                                 {%  endfor %}
+                      </div>
+                      </div>
+                </div>
+                {% endfor %}
+          </div>
+        </div>
+{% endblock %}

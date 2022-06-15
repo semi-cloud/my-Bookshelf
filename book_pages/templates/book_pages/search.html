@@ -7,10 +7,10 @@
       <div class="row justify-content-center">
         <div class="card mb-3" style="max-width: 600px;">
           <div class="row g-0">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <img src="{{ item.thumbnail }}" class="img-fluid rounded-start" alt="Card image cap">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-9">
               <div class="card-body">
                 <h5 class="card-title">{{ item.title }}</h5>
                 <p class="card-text">{{ item.contents | truncatewords_html:20 | safe }}</p>

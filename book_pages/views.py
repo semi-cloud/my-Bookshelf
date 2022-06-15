@@ -28,6 +28,17 @@ class BookUpdate(UpdateView):        # create + update
         }
 
 
+class BookList(ListView):
+    model = Book
+    ordering = '-pk'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(BookList, self).get_context_data()
+        context['items'] = Book.objects.all()
+        context['tag_list'] = Tag.objects.all()
+        return context
+
+
 class TagCreate(CreateView):
     model = Tag
     form_class = TagForm
@@ -42,13 +53,6 @@ class TagCreate(CreateView):
     def form_valid(self, form):
         form.instance.slug = form.instance.name     # slug 값 채우기
         return super(TagCreate, self).form_valid(form)
-
-
-def main(request):
-    context = {'tag_list': Tag.objects.all()}
-    return render(
-        request, 'book_pages/main.html', context
-    )
 
 
 def add_book(request):
