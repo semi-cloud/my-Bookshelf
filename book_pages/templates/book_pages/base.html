@@ -42,6 +42,15 @@
             font-family: "Pretendard-Regular", serif;
         }
     </style>
+    <script>
+    function fn_del_qna(){
+      var res = confirm('게시글을 정말로 삭제하시겠습니까?');
+      if(res){
+        window.location.href = "{{ book.get_delete_url }}"
+        alert("성공적으로 삭제되었습니다.");
+      }
+    }
+</script>
 </head>
 
 <body>

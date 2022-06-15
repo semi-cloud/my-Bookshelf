@@ -1,7 +1,13 @@
 {% extends 'book_pages/base.html' %}
-
 {% block main_area %}
     <div class="container my-3">
+      <div class="row justify-content-md-end">
+          <button type="button" style="border-radius: 20px; font-size: 0.9em"
+                  onclick="location.href='{{ book.get_update_url }}'" class="btn btn-outline-info" >수정</button>
+           &nbsp;
+          <button type="button" style="border-radius: 20px; font-size: 0.9em"
+                  onclick="fn_del_qna();" class="btn btn-outline-info" >삭제</button>
+      </div>
       <div class="row justify-content-center">
         <div class="card">
           <div class="card-body">

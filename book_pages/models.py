@@ -42,6 +42,12 @@ class Book(models.Model):
     def get_absolute_url(self):
         return f'/book/{self.pk}/'
 
+    def get_update_url(self):
+        return f'/book/create/{self.pk}/'
+
+    def get_delete_url(self):
+        return f'/book/delete/{self.pk}/'
+
     def save(self, *args, **kwargs):       # 이미지 저장
         if self.image_url and not self.image:
             img_temp = NamedTemporaryFile(delete=True)

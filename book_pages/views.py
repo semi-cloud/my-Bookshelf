@@ -88,6 +88,12 @@ def tag_filter(request, slug):
     return render(request, 'book_pages/book_list.html', context)
 
 
+def delete_book(request, pk):
+    book = Book.objects.get(pk=pk)
+    book.delete()
+    return redirect('http://localhost:8000/book/')
+
+
 def search(request):
     if request.method == 'GET':
         config_secret_debug = json.loads(open(settings.SECRET_DEBUG_FILE).read())
@@ -105,3 +111,5 @@ def search(request):
             'items': items
         }
         return render(request, 'book_pages/search.html', context=context)
+
+
