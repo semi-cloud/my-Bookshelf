@@ -1,0 +1,28 @@
+{% extends "accounts/base.html" %}
+{% block title %}
+       <h2 class="title"> Login </h2>
+{% endblock %}
+{% block content %}
+        <form method="post" class="post-form" action="{% url 'login' %}">
+            {% csrf_token %}
+            {% include "accounts/forms_error.html" %}
+            <div class="form-group">
+                <label class="font" for="username"> 이름 </label>
+                <input type="username" class="form-control" name="username" id="username"
+                       value=" {{ form.username.value | default_if_none:'' }}">
+            </div>
+            <div class="form-group">
+                <label class="font" for="password"> 비밀번호 </label>
+                <input type="text" class="form-control" name="password" id="password"
+                       value=" {{ form.password.value | default_if_none:'' }}">
+            </div>
+            <div class="row my-3 justify-content-center">
+                  <button type="submit" class="btn btn-warning" style="border-radius: 40px;"> 로그인 </button>
+            </div>
+            <hr>
+        </form>
+       <div class="row my-3 justify-content-center">
+            <button type="button" class="btn btn-outline-warning" onclick="location.href={% url 'signup' %}"
+                    style="font-size:0.8em; border-radius: 40px;">Go to Sign-up!</button>
+       </div>
+{% endblock %}

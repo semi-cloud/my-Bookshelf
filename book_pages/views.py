@@ -33,10 +33,13 @@ class BookList(ListView):
     ordering = '-pk'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(BookList, self).get_context_data()
-        context['items'] = Book.objects.all()
-        context['tag_list'] = Tag.objects.all()
-        return context
+        current_user = self.request.user
+        if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
+            context = super(BookList, self).get_context_data()
+            context['items'] = Book.objects.all()
+            context['tag_list'] = Tag.objects.all()
+            context['user'] = current_user
+            return context
 
 
 class BookDetail(DetailView):
