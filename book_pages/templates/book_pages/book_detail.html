@@ -2,11 +2,13 @@
 {% block main_area %}
     <div class="container my-3">
       <div class="row justify-content-md-end">
-          <button type="button" style="border-radius: 20px; font-size: 0.9em"
-                  onclick="location.href='{{ book.get_update_url }}'" class="btn btn-outline-info" >수정</button>
-           &nbsp;
-          <button type="button" style="border-radius: 20px; font-size: 0.9em"
-                  onclick="fn_del_qna();" class="btn btn-outline-info" >삭제</button>
+          {% if user.is_authenticated and user == book.user %}
+              <button type="button" style="border-radius: 20px; font-size: 0.9em"
+                      onclick="location.href='{{ book.get_update_url }}'" class="btn btn-outline-info" >수정</button>
+               &nbsp;
+              <button type="button" style="border-radius: 20px; font-size: 0.9em"
+                      onclick="fn_del_qna();" class="btn btn-outline-info" >삭제</button>
+          {% endif %}
       </div>
       <div class="row justify-content-center">
         <div class="card">
@@ -51,8 +53,8 @@
             <p class="card-text body">
                 {{ book.content }}
             </p>
-            <div class="create_date" style="font: italic 0.9em gray; color: gray">Posted on {{ book.created_at }}</div>
-           <div class="update_date" style="font: italic 0.9em gray; color: gray">Last Updated on {{ book.updated_at }}</div>
+            <div class="create_date" style="font: italic 0.9em gray; color: gray">Posted by {{ book.user }} on {{ book.created_at }}</div>
+           <div class="update_date" style="font: italic 0.9em gray; color: gray">Last Updated by {{ book.user }} on {{ book.updated_at }}</div>
           </div>
         </div>
       </div>

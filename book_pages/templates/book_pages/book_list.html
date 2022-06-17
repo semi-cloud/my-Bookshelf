@@ -8,7 +8,7 @@
                     <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
                             onclick="location.href='{{ tag.get_absolute_url }}'">{{ tag }}</button>
             {% endfor %}
-                <button type="button" style="border-radius: 100px" onclick="location.href='{% url 'tag' %}'" class="btn btn-warning">+</button>
+          <button type="button" style="border-radius: 50px" onclick="location.href='{% url 'tag' %}'" class="btn btn-warning">+</button>
       </div>
     </div>
 
@@ -71,28 +71,30 @@
         </div>
 
     <!-- 이웃 목록 -->
-    <h3 class="font" style="color: #4e555b"> Friends </h3>
-    <div class="container my-3">
-      <div class="row justify-content-center">
-            {% for user in neighbors %}
-                  <div class="col-md-2">
-                    <button type="button" class="circle font" id="{{ user.pk }}_profile">{{ user }}</button>
-                    <script>
-                        var R = Math.floor((Math.random() * 127) + 127);
-                        var G = Math.floor((Math.random() * 127) + 127);
-                        var B = Math.floor((Math.random() * 127) + 127);
+    {% if user.is_authenticated and equals_user %}
+            <h3 class="font" style="color: #4e555b"> Friends </h3>
+            <div class="container my-3">
+              <div class="row justify-content-center">
+                    {% for user in neighbors %}
+                          <div class="col-md-2">
+                            <button type="button" class="circle font" id="{{ user.pk }}_profile"
+                            onclick="location.href='/book?user={{ user }}'">{{ user }}</button>
+                            <script>
+                                var R = Math.floor((Math.random() * 127) + 127);
+                                var G = Math.floor((Math.random() * 127) + 127);
+                                var B = Math.floor((Math.random() * 127) + 127);
 
-                        var rgb = (R << 16) + (G << 8) + B;
-                        var colorCode = "#" + rgb.toString(16);
-                        document.getElementById({{ user.pk }} + "_profile").style.background = colorCode;
-                    </script>
+                                var rgb = (R << 16) + (G << 8) + B;
+                                var colorCode = "#" + rgb.toString(16);
+                                document.getElementById({{ user.pk }} + "_profile").style.background = colorCode;
+                            </script>
+                          </div>
+                    {% endfor %}
+                    <button type="button" style="border-radius: 50%; width: 60px; height: 60px;" data-toggle="modal" data-target="#follow_modal"
+                                    class="btn btn-outline-warning font" onclick="{% url 'follow' %}"> 추가 </button>
                   </div>
-            {% endfor %}
-            <button type="button" style="border-radius: 50%; width: 60px; height: 60px;" data-toggle="modal" data-target="#follow_modal"
-                            class="btn btn-outline-warning font" onclick="{% url 'follow' %}"> 추가 </button>
-          </div>
-      </div>
-    </div>
+              </div>
+    {% endif %}
 
     <!-- Modal -->
     <div class="modal fade" id="follow_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
@@ -16,7 +18,8 @@ from .models import Book, Tag, Follow
 from main import settings
 
 
-class BookUpdate(UpdateView):  # create + update
+class BookUpdate(LoginRequiredMixin, UpdateView):  # create + update
+    login_url = '/'
     model = Book
     form_class = BookForm
     template_name = "book_pages/book_form.html"
@@ -29,20 +32,35 @@ class BookUpdate(UpdateView):  # create + update
             'image': book.image
         }
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().user:
+            return super(BookUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
 
-class BookList(ListView):
+
+class BookList(LoginRequiredMixin, ListView):  # 애초에 로그인 해야만 메인 페이지 접근 갸능
+    login_url = '/'
     model = Book
     ordering = '-pk'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        current_user = self.request.user
-        if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
+        if self.request.method == "GET":
+            name = self.request.GET.get('user')
             context = super(BookList, self).get_context_data()
-            context['items'] = Book.objects.all()
-            context['tag_list'] = Tag.objects.all()
-            context['user'] = current_user
-            context['neighbors'] = follow_list(self, current_user)
+            context['equals_user'] = True
+            user = self.request.user
+            if user.is_authenticated and (user.is_staff or user.is_superuser):
+                if name:
+                    user = get_user_by_name(name)
+                    context['equals_user'] = False
+
+            context['items'] = user.book_set.all()
+            context['tag_list'] = user.tag_set.all()
+            context['user'] = user
+            context['neighbors'] = follow_list(self, user)
             return context
+
 
 class BookDetail(DetailView):
     model = Book
@@ -59,12 +77,13 @@ class TagCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(TagCreate, self).get_context_data()
-        context['tag_list'] = Tag.objects.all()
+        context['tag_list'] = self.request.user.tag_set.all()
         return context
 
     # Post
     def form_valid(self, form):
         form.instance.slug = form.instance.name  # slug 값 채우기
+        form.instance.user = self.request.user
         return super(TagCreate, self).form_valid(form)
 
 
@@ -77,17 +96,22 @@ def add_book(request):
         book_pages.title = dict_item['title']
         book_pages.author = ','.join(dict_item['authors'])
         book_pages.image_url = dict_item['thumbnail']
-        book_pages.save()
 
+        # 유저 저장
+        current_user = request.user
+        if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
+            book_pages.user = current_user
+        book_pages.save()
         return redirect(f'http://localhost:8000/book/create/{book_pages.pk}')
 
 
 def tag_filter(request, slug):
-    tag = Tag.objects.get(slug=slug)
+    user = request.user
+    tag = Tag.objects.get(slug=slug, user=user)
     book_list = tag.book_set.all()
 
     context = {
-        'tag_list': Tag.objects.all(),
+        'tag_list': user.tag_set.all(),
         'items': book_list
     }
     return render(request, 'book_pages/book_list.html', context)
@@ -151,12 +175,9 @@ def add_neighbor(request):
 
 
 def get_user_by_name(name):
-    user_list = get_user_model().objects.all()
-    for user in user_list:
-        if user.username == name:
-            return user
-        else:
-            continue
+    user = get_user_model().objects.get(username=name)
+    if user:
+        return user
     return None
 
 
