@@ -9,5 +9,7 @@ urlpatterns = [
     path('create/<int:pk>/', views.BookUpdate.as_view()),
     path('delete/<int:pk>/', views.delete_book),
     path('tag/<str:slug>/', views.tag_filter),
-    path('create/tag/', views.TagCreate.as_view(), name="tag")
+    path('create/tag/', views.TagCreate.as_view(), name="tag"),
+    path('neighbor/add/', views.add_neighbor, name="follow"),
+    path('neighbor/search/', views.search_neighbor, name="search_user"),
 ]

@@ -10,6 +10,11 @@ from django.db import models
 import datetime
 
 
+class Follow(models.Model):
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following_user")
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follow_user")
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
@@ -55,5 +60,6 @@ class Book(models.Model):
             img_temp.flush()
             self.image.save(f"image_{datetime.datetime.now()}.jpg", File(img_temp))
         super(Book, self).save(*args, **kwargs)
+
 
 

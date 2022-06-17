@@ -1,20 +1,22 @@
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
 import urllib
 from urllib.parse import urlparse
 
 import requests
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.auth import get_user_model
 # Create your views here.
 
 import json
 
 from .forms import BookForm, TagForm
-from .models import Book, Tag
+from .models import Book, Tag, Follow
 from main import settings
 
 
-class BookUpdate(UpdateView):        # create + update
+class BookUpdate(UpdateView):  # create + update
     model = Book
     form_class = BookForm
     template_name = "book_pages/book_form.html"
@@ -39,8 +41,8 @@ class BookList(ListView):
             context['items'] = Book.objects.all()
             context['tag_list'] = Tag.objects.all()
             context['user'] = current_user
+            context['neighbors'] = follow_list(self, current_user)
             return context
-
 
 class BookDetail(DetailView):
     model = Book
@@ -62,7 +64,7 @@ class TagCreate(CreateView):
 
     # Post
     def form_valid(self, form):
-        form.instance.slug = form.instance.name     # slug 값 채우기
+        form.instance.slug = form.instance.name  # slug 값 채우기
         return super(TagCreate, self).form_valid(form)
 
 
@@ -114,5 +116,48 @@ def search(request):
             'items': items
         }
         return render(request, 'book_pages/search.html', context=context)
+
+
+def follow_list(self, user):
+    relation_list = Follow.objects.all()
+    neighbor_list = []
+    for relation in relation_list:
+        if relation.follower == user:
+            neighbor_list.append(relation.following)
+    return neighbor_list
+
+
+@csrf_exempt
+def search_neighbor(request):
+    if request.method == "GET":
+        name = request.GET.get("username")
+        user = get_user_by_name(name)
+        if user:
+            content = {"user": user.username, "email": user.email}
+            return HttpResponse(json.dumps(content, indent=4, ensure_ascii=False))
+        else:
+            return HttpResponse("No matched User..Retry")
+
+
+@csrf_exempt
+def add_neighbor(request):
+    if request.method == "GET":
+        name = request.GET.get("user")
+        relation = Follow()
+        relation.follower = request.user
+        relation.following = get_user_by_name(name)
+        relation.save()
+    return redirect('http://localhost:8000/book/')
+
+
+def get_user_by_name(name):
+    user_list = get_user_model().objects.all()
+    for user in user_list:
+        if user.username == name:
+            return user
+        else:
+            continue
+    return None
+
 
 
