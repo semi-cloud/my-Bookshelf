@@ -114,15 +114,20 @@ def tag_filter(request, slug):
 
     context = {
         'tag_list': user.tag_set.all(),
-        'items': book_list
+        'items': book_list,
+        'neighbors': follow_list(None, user),
+        'equals_user' : True
     }
     return render(request, 'book_pages/book_list.html', context)
 
 
 def delete_book(request, pk):
-    book = Book.objects.get(pk=pk)
-    book.delete()
-    return redirect("/book")
+    if request.user.is_authenticated:
+        book = Book.objects.get(pk=pk)
+        book.delete()
+        return redirect("/book")
+    else:
+        raise PermissionDenied
 
 
 def search(request):

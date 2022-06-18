@@ -27,6 +27,6 @@ class CommentForm(forms.ModelForm):
             'content': '댓글 내용'
         }
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
+            'content': forms.Textarea(attrs={'rows': 2, 'cols': 100}),
         }
 
