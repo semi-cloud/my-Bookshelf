@@ -8,7 +8,9 @@
                     <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
                             onclick="location.href='{{ tag.get_absolute_url }}?user={{ tag.user }}'">{{ tag }}</button>
             {% endfor %}
-          <button type="button" style="border-radius: 50px; width: 35px; height: 35px; font-size: 0.7em" onclick="location.href='{% url 'tag' %}'" class="btn btn-outline-warning">+</button>
+           {% if user.is_authenticated and equals_user %}
+             <button type="button" style="border-radius: 50px; width: 35px; height: 35px; font-size: 0.7em" onclick="location.href='{% url 'tag' %}'" class="btn btn-outline-warning">+</button>
+           {% endif %}
       </div>
     </div>
 
