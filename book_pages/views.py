@@ -181,11 +181,20 @@ def search_neighbor(request):
 @csrf_exempt
 def add_neighbor(request):
     if request.method == "GET":
+        current_user = request.user
         name = request.GET.get("user")
-        relation = Follow()
-        relation.follower = request.user
-        relation.following = get_user_by_name(name)
-        relation.save()
+        follows = Follow.objects.filter(follower=current_user)
+
+        if current_user.username != name:  # 자기 자신은 팔로우 불가능
+            for follow in follows:
+                if follow.following.username == name:   # 이미 팔로잉 중이 아니면 추가
+                    return redirect("/book")
+            else:
+                relation = Follow()
+                relation.follower = current_user
+                relation.following = get_user_by_name(name)
+                relation.save()
+
     return redirect("/book")
 
 

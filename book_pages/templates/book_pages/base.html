@@ -80,6 +80,15 @@
       }
     }
 
+    function fn_follow(user){
+      var res = confirm('사용자를 팔로우 하시겠습니까?');
+      if(res){
+        window.location.href = "/book/neighbor/add/?user="+user
+        alert("이웃으로 추가되었습니다.");
+      }
+    }
+
+
     $(function (){
       const buttons = document.querySelectorAll('#modify_btn');
       buttons.forEach(function(item){

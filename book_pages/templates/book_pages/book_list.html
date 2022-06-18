@@ -121,10 +121,10 @@
                         <input name="username" class="form-control me-2 " type="search" placeholder="search user name to follow" aria-label="Search">
                         <button class="btn btn-outline-success" type="button" id="search-modal">🔍</button>
                 </form>
-                <div class="row my-3">
-                    <div class="col-md-10" id="d2">
-                    </div>
+                <div class="row my-3 justify-content-center">
+                    <div id="d2"></div>
                 </div>
+
           </div>
           <script>
               $(document).ready(function(){
@@ -136,20 +136,26 @@
                             data: sendData,
                             dataType:'json',
                             success : function(data){
-                                let bt = document.createElement('a');
+                                let bt = document.createElement('button')
+                                bt.innerText = data['user'] + " : " + data['email']
+                                bt.type = 'submit';
                                 bt.classList.add('btn');
                                 bt.classList.add('btn-outline-secondary');
-                                bt.classList.add('font');
-                                bt.style.cssText = 'border-radius: 40px;width: 400px';
-                                bt.innerText = data['user'] + ':' + data['email']
-                                bt.type = 'submit';
-                                bt.setAttribute('href', '/book/neighbor/add/?user='+data['user'])
+                                bt.style.cssText = 'border-radius: 40px;width: 450px';
+                                bt.onclick = function (){
+                                      var res = confirm('사용자를 팔로우 하시겠습니까?');
+                                      if(res){
+                                        window.location.href = "/book/neighbor/add/?user="+ data['user']
+                                        alert("이웃으로 추가되었습니다.");
+                                      }
+                                }
                                 $('#d2').html(bt);
                             },
                             error : function(request,status,error) {
                                 console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                             }
                         });
+
                     });
               });
 
@@ -159,5 +165,6 @@
           </div>
         </div>
       </div>
+    </div>
     </div>
 {% endblock %}
