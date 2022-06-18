@@ -108,17 +108,25 @@ def add_book(request):
 
 
 def tag_filter(request, slug):
-    user = request.user
-    tag = Tag.objects.get(slug=slug, user=user)
-    book_list = tag.book_set.all()
+    if request.method == "GET":
+        equals_user = True
+        user = request.user
+        other_user = get_user_by_name(request.GET.get('user'))
+        if other_user != user:
+            user = other_user
+            equals_user = False
 
-    context = {
-        'tag_list': user.tag_set.all(),
-        'items': book_list,
-        'neighbors': follow_list(None, user),
-        'equals_user' : True
-    }
-    return render(request, 'book_pages/book_list.html', context)
+        tag = Tag.objects.get(slug=slug, user=user)
+        book_list = tag.book_set.all()
+
+        context = {
+            'tag_list': user.tag_set.all(),
+            'user': user,
+            'items': book_list,
+            'neighbors': follow_list(None, user),
+            'equals_user': equals_user
+        }
+        return render(request, 'book_pages/book_list.html', context)
 
 
 def delete_book(request, pk):

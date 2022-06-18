@@ -6,7 +6,7 @@
       <div class="row justify-content-center">
             {% for tag in tag_list %}
                     <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
-                            onclick="location.href='{{ tag.get_absolute_url }}'">{{ tag }}</button>
+                            onclick="location.href='{{ tag.get_absolute_url }}?user={{ tag.user }}'">{{ tag }}</button>
             {% endfor %}
           <button type="button" style="border-radius: 50px; width: 35px; height: 35px; font-size: 0.7em" onclick="location.href='{% url 'tag' %}'" class="btn btn-outline-warning">+</button>
       </div>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
-                            <h5 class="card-title font">{{ item.title }}</h5>
+                            <h5 class="card-title font" style="font-size: 1.1em">{{ item.title }}</h5>
                             <p class="card-text">
                                  <div id= "{{ item }}"></div>
                                  <script>

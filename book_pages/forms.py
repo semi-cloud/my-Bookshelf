@@ -15,7 +15,7 @@ class TagForm(forms.ModelForm):
         model = Tag
         fields = ['name', 'slug']
         labels = {
-            'name': 'Create Your Own Tag!'
+            'name': '커스텀 태그'
         }
 
 
