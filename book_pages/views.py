@@ -1,3 +1,4 @@
+from django.contrib.admin.views import main
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
@@ -13,8 +14,8 @@ from django.contrib.auth import get_user_model
 
 import json
 
-from .forms import BookForm, TagForm
-from .models import Book, Tag, Follow
+from .forms import BookForm, TagForm, CommentForm
+from .models import Book, Tag, Follow, Comment
 from main import settings
 
 
@@ -67,6 +68,7 @@ class BookDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BookDetail, self).get_context_data()
+        context['comment_form'] = CommentForm
         return context
 
 
@@ -120,7 +122,7 @@ def tag_filter(request, slug):
 def delete_book(request, pk):
     book = Book.objects.get(pk=pk)
     book.delete()
-    return redirect('http://localhost:8000/book/')
+    return redirect("/book")
 
 
 def search(request):
@@ -171,7 +173,56 @@ def add_neighbor(request):
         relation.follower = request.user
         relation.following = get_user_by_name(name)
         relation.save()
-    return redirect('http://localhost:8000/book/')
+    return redirect("/book")
+
+
+def add_comment(request, pk):
+    if request.user.is_authenticated:
+        book = get_object_or_404(Book, pk=pk)
+
+        if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.book = book
+                comment.user = request.user
+                comment.save()
+                return redirect(comment.get_absolute_url())
+        else:
+            return redirect(book.get_absolute_url())
+    else:
+        raise PermissionDenied
+
+
+def update_comment(request, book_pk, comment_pk):
+    if request.user.is_authenticated:
+        book = get_object_or_404(Book, pk=book_pk)
+
+        if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+
+            if comment_form.is_valid():
+                comment = Comment.objects.get(pk=comment_pk)
+                comment.content = comment_form.instance.content
+                comment.save()
+                return redirect(comment.get_absolute_url())
+        else:
+            return redirect(book.get_absolute_url())
+    else:
+        raise PermissionDenied
+
+
+def delete_comment(request, book_pk, comment_pk):
+    if request.user.is_authenticated:
+        book = get_object_or_404(Book, pk=book_pk)
+
+        if request.method == 'GET':
+            comment = Comment.objects.get(pk=comment_pk)
+            comment.delete()
+            return redirect(book.get_absolute_url())
+    else:
+        raise PermissionDenied
 
 
 def get_user_by_name(name):
@@ -179,6 +230,4 @@ def get_user_by_name(name):
     if user:
         return user
     return None
-
-
 

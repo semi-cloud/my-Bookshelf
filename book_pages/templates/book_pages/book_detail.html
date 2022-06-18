@@ -1,4 +1,6 @@
 {% extends 'book_pages/base.html' %}
+{% load crispy_forms_tags %}
+
 {% block main_area %}
     <div class="container my-3">
       <div class="row justify-content-md-end">
@@ -61,7 +63,71 @@
     </div>
 
     <!-- Comments Form -->
-    <div class="row">
-      <h5 style="font-size: 1.3em"> Leave a Comment</h5>
+    <div class="container my-3">
+        {% if user.is_authenticated %}
+            <div class="row justify-content-center">
+                 <h5 style="font-size: 1.3em"> Leave a Comment</h5>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="card-body">
+                  <form class="form-horizontal"
+                        id="comment-form" method="post" action="{{ book.get_absolute_url }}comment/">
+                      {% csrf_token %}
+                    <div class="row justify-content-sm-center">
+                      <div class="form-group col-sm-8">
+                           <div class="form-group font">
+                                     {{ comment_form | crispy }}
+                           </div>
+                      </div>
+                      <div class="col-sm-2 d-flex">
+                          <button type="submit" class="btn btn-warning item align-self-center" style="border-radius:20px;">Submit</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if book.comment_set.exists %}
+              {% for comment in book.comment_set.iterator %}
+                   <!-- Single Comment -->
+                    <div class="d-flex" id="commentTable">
+                        <div>
+                            <button type="button" class="circle font" style="background-color: #f1c7c3" id="{{ user.pk }}_profile" >{{ comment.user }}</button>
+                        </div>
+                        <div class="col-md-8  item align-self-center">
+                            <div class="" style="font-size: 0.8em">{{ comment.created_at }}</div>
+                            <div class="font my-2" id="content-comment" style="display : block">
+                                {{ comment.content | linebreaks }}
+                            </div>
+                            <!--수정 폼-->
+                            <div id="hide" style="display : none">
+                                <form class="comment-update" id = "comment-update" method="post" action="{{ book.get_absolute_url }}update_comment/{{ comment.pk }}/">
+                                    {% csrf_token %}
+                                    <div class="form-group font">
+                                        {{ comment_form | crispy }}
+                                    </div>
+                                    <button type="button" style="border-radius: 20px; font-size: 0.9em" onclick="location.href='{{ book.get_absolute_url }}'"
+                                            id = "comment-update-btn" class="btn btn-outline-info" >취소</button>
+                                    <button type="submit" style="border-radius: 20px; font-size: 0.9em"
+                                        id = "comment-update-btn" class="btn btn-outline-info" >완료</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% if user.is_authenticated and user == comment.user %}
+                            <div class="col-md-2  item align-self-center" style="display : inline-block" id="comment_btn">
+                                <div class="row">
+                                    <button type="button" style="border-radius: 20px; font-size: 0.9em" id="modify_btn" class="btn btn-outline-info" >수정</button>
+                                    &nbsp;
+                                    <button type="button" style="border-radius: 20px; font-size: 0.9em" id="delete_btn"
+                          onclick="fn_del_comment({{ comment.pk }});" class="btn btn-outline-info" >삭제</button>
+                                </div>
+                            </div>
+                       {% endif %}
+                    </div>
+              {% endfor %}
+        {% endif %}
+        </div>
     </div>
 {% endblock %}

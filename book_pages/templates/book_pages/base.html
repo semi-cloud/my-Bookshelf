@@ -71,6 +71,35 @@
         alert("성공적으로 삭제되었습니다.");
       }
     }
+
+    function fn_del_comment(pk){
+      var res = confirm('댓글을 정말로 삭제하시겠습니까?');
+      if(res){
+        window.location.href = "{{ book.get_absolute_url }}delete_comment/"+pk
+        alert("성공적으로 삭제되었습니다.");
+      }
+    }
+
+    $(function (){
+      const buttons = document.querySelectorAll('#modify_btn');
+      buttons.forEach(function(item){
+        item.addEventListener("click", function (){
+          var table = this.closest('#commentTable');
+          var x = table.querySelector('#hide');
+          var content = table.querySelector('#content-comment');
+          var btns = table.querySelector('#comment_btn');
+          if (x.style.display === "none") {
+            x.style.display = "block";
+            content.style.display = "none";
+            btns.style.display = "none";
+          } else {
+            x.style.display = "none";
+            content.style.display = "block";
+            btns.style.display = "inline-block";
+          }
+        });
+      });
+    });
 </script>
 </head>
 

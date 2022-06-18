@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book, Tag
+from .models import Book, Tag, Comment
 
 
 class BookForm(forms.ModelForm):
@@ -17,3 +17,16 @@ class TagForm(forms.ModelForm):
         labels = {
             'name': 'Create Your Own Tag!'
         }
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        labels = {
+            'content': '댓글 내용'
+        }
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
+        }
+
