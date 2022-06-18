@@ -70,7 +70,7 @@
             </div>
             <hr/>
             <div class="row">
-                <div class="card-body">
+                <div class="card-body" style="padding-left: 120px">
                   <form class="form-horizontal"
                         id="comment-form" method="post" action="{{ book.get_absolute_url }}comment/">
                       {% csrf_token %}
@@ -93,7 +93,7 @@
               {% for comment in book.comment_set.iterator %}
                    <!-- Single Comment -->
                     <div class="d-flex" id="commentTable">
-                        <div>
+                        <div style="padding-left: 60px">
                                 <button type="button" class="circle font" style="background-color: #f1c7c3" id="{{ user.pk }}_profile" >{{ comment.user }}</button>
                             </div>
                         <div class="col-md-8  item align-self-center">

@@ -22,9 +22,9 @@
               </div>
             </div>
             </div>
-            <div class="card-footer text-muted" style="font-size: 0.9em">
-                Published on {{ item.datetime }} written by
-                <a href="#">{{ item.authors }}</a>
+            <div class="card-footer text-muted" style="font: 0.9em gray">
+                Published on {{ item.datetime | slice:":9" }} written by
+                <a >{{ item.authors }}</a>
             </div>
           </div>
       </div>
