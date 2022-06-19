@@ -57,6 +57,9 @@ class Book(models.Model):
             self.image.save(f"image_{datetime.datetime.now()}.jpg", File(img_temp))
         super(Book, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['created_at']
+
 
 class Follow(models.Model):
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following_user")

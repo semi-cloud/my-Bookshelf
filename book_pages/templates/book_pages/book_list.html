@@ -16,10 +16,10 @@
 
   <!--나의 책장-->
     <h1 class="title" style="color: #645247">{{ user }}'s BOOKSHELF</h1>
+    {% if item_page %}
         <div class="container my-3">
           <div class="row justify-content-center">
-             {% if items %}
-              {% for item in items %}
+              {% for item in item_page %}
                 <div class="col-md-5">
                     <div class="card mb-3" style="max-width: 500px;">
                       <div class="row g-0">
@@ -66,25 +66,54 @@
                       </div>
                 </div>
                 {% endfor %}
-             {% else %}
-                 <h5 class="font" style="color:#797474"> 아직 추가된 책이 없습니다. </h5>
-             {% endif %}
           </div>
         </div>
+        <div class="row">
+          {% if item_page.has_other_pages %}
+                        <div class="btn-group" role="group" aria-label="Item pagination">
+                            {% if item_page.has_previous %}
+                                <a href="?page={{ item_page.previous_page_number }}" class="btn btn-outline-warning">&laquo;</a>
+                            {% endif %}
+
+                            {% for page_number in item_page.paginator.page_range %}
+                                {% if item_page.number == page_number %}
+                                    <button class="btn btn-outline-warning active">
+                                        <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                                    </button>
+                                {% else %}
+                                    <a href="?page={{ page_number }}" class="btn btn-outline-warning">
+                                        {{ page_number }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if item_page.has_next %}
+                                <a href="?page={{ item_page.next_page_number }}" class="btn btn-outline-warning">&raquo;</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+        </div>
+     {% else %}
+         <div class="container my-3">
+          <div class="row justify-content-center">
+                 <h5 class="font" style="color:#797474"> 아직 추가된 책이 없습니다. </h5>
+          </div>
+        </div>
+     {% endif %}
 
     <!-- 이웃 목록 -->
     {% if user.is_authenticated and equals_user %}
-            <div class="container my-1">
+            <div class="container my-4">
                 <div class="row justify-content-center">
-                    <h2 class="title" style="color: #4e555b"> Friend's Bookshelf </h2>
+                    <h2 class="title" style="color: #4e555b;font-size: 2.3em"> Friend's Bookshelf </h2>
                 </div>
                  <hr/>
                 <div class="row justify-content-md-end">
-                    <button type="button" style="border-radius: 50%; width: 33px; height: 33px; font-size: 0.7em" data-toggle="modal" data-target="#follow_modal"
+                    <button type="button" style="border-radius: 50%; width: 32px; height: 32px; font-size: 0.7em" data-toggle="modal" data-target="#follow_modal"
                                             class="btn btn-outline-warning font item align-self-center" onclick="{% url 'follow' %}">+</button>
                 </div>
             </div>
-            <div class="container my-1">
+            <div class="container">
               <div class="row justify-content-center d-flex">
                     {% for user in neighbors %}
                           <div class="col-md-2 justify-content-center text-center">

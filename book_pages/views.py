@@ -18,6 +18,12 @@ from .forms import BookForm, TagForm, CommentForm
 from .models import Book, Tag, Follow, Comment
 from main import settings
 
+from django.core.paginator import (
+    Paginator,
+    EmptyPage,
+    PageNotAnInteger,
+)
+
 
 class BookUpdate(LoginRequiredMixin, UpdateView):  # create + update
     login_url = '/'
@@ -46,6 +52,7 @@ class BookList(LoginRequiredMixin, ListView):  # 애초에 로그인 해야만 �
     ordering = '-pk'
 
     def get_context_data(self, *, object_list=None, **kwargs):
+
         if self.request.method == "GET":
             name = self.request.GET.get('user')
             context = super(BookList, self).get_context_data()
@@ -56,11 +63,23 @@ class BookList(LoginRequiredMixin, ListView):  # 애초에 로그인 해야만 �
                     user = get_user_by_name(name)
                     context['equals_user'] = False
 
-            context['items'] = user.book_set.all()
-            context['tag_list'] = user.tag_set.all()
-            context['user'] = user
-            context['neighbors'] = follow_list(self, user)
-            return context
+                default_page = 1
+                page = self.request.GET.get('page', default_page)
+                items_per_page = 4
+                paginator = Paginator(user.book_set.all(), items_per_page)
+
+                try:
+                    items_page = paginator.page(page)
+                except PageNotAnInteger:
+                    items_page = paginator.page(default_page)
+                except EmptyPage:
+                    items_page = paginator.page(paginator.num_pages)
+
+                context['item_page'] = items_page
+                context['tag_list'] = user.tag_set.all()
+                context['user'] = user
+                context['neighbors'] = follow_list(self, user)
+                return context
 
 
 class BookDetail(DetailView):
