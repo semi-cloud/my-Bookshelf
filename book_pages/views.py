@@ -52,7 +52,6 @@ class BookList(LoginRequiredMixin, ListView):  # 애초에 로그인 해야만 �
     ordering = '-pk'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-
         if self.request.method == "GET":
             name = self.request.GET.get('user')
             context = super(BookList, self).get_context_data()
@@ -94,7 +93,7 @@ class BookDetail(DetailView):
 class TagCreate(CreateView):
     model = Tag
     form_class = TagForm
-    success_url = "/book/create/tag/"
+    success_url = None
 
     def get_context_data(self, **kwargs):
         context = super(TagCreate, self).get_context_data()
@@ -106,6 +105,10 @@ class TagCreate(CreateView):
         form.instance.slug = form.instance.name  # slug 값 채우기
         form.instance.user = self.request.user
         return super(TagCreate, self).form_valid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.success_url = self.request.GET.get('next')    # 왔던 주소 저장
+        return super(TagCreate, self).dispatch(request, *args, **kwargs)
 
 
 def add_book(request):

@@ -69,6 +69,7 @@
                  <h5 style="font-size: 1.3em"> Leave a Comment</h5>
             </div>
             <hr/>
+            {% if user != book.user %}
             <div class="row">
                 <div class="card-body" style="padding-left: 120px">
                   <form class="form-horizontal"
@@ -87,6 +88,7 @@
                   </form>
                 </div>
             </div>
+            {% endif %}
         {% endif %}
 
         {% if book.comment_set.exists %}

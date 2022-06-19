@@ -13,11 +13,11 @@
             <div class="col-md-9">
               <div class="card-body">
                 <h5 class="card-title font">{{ item.title }}</h5>
-                <p class="card-text body">{{ item.contents | truncatewords_html:20 | safe }}</p>
+                <p class="card-text body">{{ item.contents | truncatewords_html:15 | safe }}</p>
                   <form class="d-flex" action="{% url 'add' %}" method="POST">
                         {% csrf_token %}
                         <input name = "item" class = "temp2" type="hidden" value="{{ item }}">
-                        <button class="btn btn-outline-warning" style="border-radius: 30px;" type="submit"> 책장에 추가 </button>
+                        <button class="btn btn-outline-warning" style="border-radius: 30px; font-size: 0.7em" type="submit"> 책장에 추가 </button>
                   </form>
               </div>
             </div>

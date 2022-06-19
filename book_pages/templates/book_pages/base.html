@@ -88,6 +88,14 @@
       }
     }
 
+    function fn_tag(){
+      var res = confirm('태그를 추가하시겠습니까?');
+      if(res){
+        window.location.href = '{% url 'tag' %}?next={{request.path}}'
+        alert("해당 페이지에서 태그를 추가하면 작성 내용이 유실됩니다.");
+      }
+    }
+
 
     $(function (){
       const buttons = document.querySelectorAll('#modify_btn');
