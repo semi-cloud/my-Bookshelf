@@ -13,7 +13,7 @@
       {% endif %}
             {% for tag in tag_list %}
                     <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
-                            onclick="fn_tag_delete( '{{ tag.get_absolute_url }}', '{{ tag.user }}');">{{ tag }}</button>
+                            onclick="fn_tag_delete( '{{ tag.get_absolute_url }}', '{{ request.user }}', '{{ tag.user }}');">{{ tag }}</button>
             {% endfor %}
            {% if user.is_authenticated and equals_user %}
              <button type="button" style="border-radius: 50px; width: 35px; height: 35px; font-size: 0.7em" onclick="location.href='{% url 'tag_create' %}'" class="btn btn-outline-warning">+</button>

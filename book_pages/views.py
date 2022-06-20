@@ -36,7 +36,8 @@ class BookUpdate(LoginRequiredMixin, UpdateView):  # create + update
         return {
             'title': book.title,
             'author': book.author,
-            'image': book.image
+            'image': book.image,
+            'tags': Tag.objects.filter(user=self.request.user)
         }
 
     def dispatch(self, request, *args, **kwargs):
@@ -133,10 +134,11 @@ def tag_filter(request, slug):
     if request.method == "GET":
         equals_user = True
         user = request.user
-        other_user = get_user_by_name(request.GET.get('user'))
-        if other_user != user:
-            user = other_user
-            equals_user = False
+        if request.GET.get('user'):
+            other_user = get_user_by_name(request.GET.get('user'))
+            if other_user != user:
+                user = other_user
+                equals_user = False
 
         tag = Tag.objects.get(slug=slug, user=user)
         book_list = tag.book_set.all()

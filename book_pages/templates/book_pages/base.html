@@ -96,13 +96,17 @@
       }
     }
 
-    function fn_tag_delete(url, user){
+    function fn_tag_delete(url, user, tagUser){
       var res = confirm('태그를 삭제하시겠습니까?');
       if(res){
-        window.location.href = url + 'delete/'
-        alert("태그가 삭제되었습니다.");
+          if(user !== tagUser){
+              alert("본인의 태그만 삭제할 수 있습니다.");
+          }else{
+              window.location.href = url + 'delete/'
+              alert("태그가 삭제되었습니다.");
+          }
       }else{
-        window.location.href = url + '?user=' + user
+        window.location.href = url + '?user=' + tagUser
       }
     }
 
