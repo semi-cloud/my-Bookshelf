@@ -4,6 +4,13 @@
   <!--태그 목록-->
     <div class="container my-3">
       <div class="row justify-content-center">
+      {% if equals_user %}
+          <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
+                            onclick="location.href='{% url 'main' %}'">전체</button>
+      {% else %}
+           <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
+                            onclick="location.href='/book?user={{ user }}'">전체</button>
+      {% endif %}
             {% for tag in tag_list %}
                     <button type="button" style="border-radius: 40px" class="btn btn-outline-warning body"
                             onclick="fn_tag_delete( '{{ tag.get_absolute_url }}', '{{ tag.user }}');">{{ tag }}</button>
