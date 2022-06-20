@@ -69,7 +69,32 @@
           </div>
         </div>
         <div class="row">
-          {% if item_page.has_other_pages %}
+        {% if user != request.user %}
+              {% if item_page.has_other_pages %}
+                        <div class="btn-group" role="group" aria-label="Item pagination">
+                            {% if item_page.has_previous %}
+                                <a href="?user={{ user }}&page={{ item_page.previous_page_number }}" class="btn btn-outline-warning">&laquo;</a>
+                            {% endif %}
+
+                            {% for page_number in item_page.paginator.page_range %}
+                                {% if item_page.number == page_number %}
+                                    <button class="btn btn-outline-warning active">
+                                        <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                                    </button>
+                                {% else %}
+                                    <a href="?user={{ user }}&page={{ page_number }}" class="btn btn-outline-warning">
+                                        {{ page_number }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if item_page.has_next %}
+                                <a href="?user={{ user }}&page={{ item_page.next_page_number }}" class="btn btn-outline-warning">&raquo;</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+        {% else %}
+              {% if item_page.has_other_pages %}
                         <div class="btn-group" role="group" aria-label="Item pagination">
                             {% if item_page.has_previous %}
                                 <a href="?page={{ item_page.previous_page_number }}" class="btn btn-outline-warning">&laquo;</a>
@@ -92,6 +117,7 @@
                             {% endif %}
                         </div>
                         {% endif %}
+        {% endif %}
         </div>
      {% else %}
          <div class="container my-3">
